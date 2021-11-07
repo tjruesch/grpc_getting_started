@@ -27,7 +27,7 @@ func (t *Translation) Translate(
 	var c vendors.Client
 	switch i.GetVendor() {
 	case protos.Vendors_DeepL:
-		c = vendors.NewGoogleClient(os.Getenv("GOOGLE_PROJECT_ID"))
+		c = vendors.NewDeepLClient(os.Getenv("DEEPL_API_KEY"))
 	case protos.Vendors_GoogleTranslate:
 		c = vendors.NewGoogleClient(os.Getenv("GOOGLE_PROJECT_ID"))
 	case protos.Vendors_MMT:
@@ -43,6 +43,7 @@ func (t *Translation) Translate(
 	resp, err := c.TranslateText(i.GetText(), i.GetSourceLang().String(), i.TargetLang.String())
 	if err != nil {
 		sentry.CaptureException(err)
+		return nil, err
 	}
 
 	tra := &protos.TranslationOutput{
