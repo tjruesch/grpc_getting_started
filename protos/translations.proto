@@ -9,6 +9,7 @@ message TranslationInput {
     string Text = 1;
     Languages SourceLang = 2;
     Languages TargetLang = 3;
+    Vendors Vendor = 4;
 }
 
 message TranslationOutput {
@@ -25,4 +26,10 @@ enum Languages {
     CZ = 3;
     FA = 4;
     ZH = 5;
+}
+
+enum Vendors {
+    GoogleTranslate = 0;
+    DeepL = 1;
+    MMT = 2;
 }
