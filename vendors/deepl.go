@@ -3,7 +3,6 @@ package vendors
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -143,6 +142,6 @@ func (d *DeepLClient) callAPI(data *url.Values, url string) ([]byte, error) {
 	return body, nil
 }
 
-func (d *DeepLClient) TranslateFile(file io.ReadCloser, sl string, tl string) (io.ReadCloser, error) {
+func (d *DeepLClient) TranslateFile(file *os.File, sl string, tl string) (*os.File, error) {
 	return nil, NewGoogleError("Not Implemented")
 }

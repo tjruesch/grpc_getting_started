@@ -3,7 +3,7 @@ package vendors
 import (
 	"context"
 	"fmt"
-	"io"
+	"os"
 
 	translate "cloud.google.com/go/translate/apiv3"
 	"github.com/getsentry/sentry-go"
@@ -70,6 +70,6 @@ func (g *GoogleClient) TranslateText(
 	return tr, nil
 }
 
-func (g *GoogleClient) TranslateFile(file io.ReadCloser, sl string, tl string) (io.ReadCloser, error) {
+func (g *GoogleClient) TranslateFile(file *os.File, sl string, tl string) (*os.File, error) {
 	return nil, NewGoogleError("Not Implemented")
 }

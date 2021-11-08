@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"os"
 	"unicode/utf8"
 
@@ -28,16 +28,13 @@ func (t *Translation) Translate(
 	switch i.GetVendor() {
 	case protos.Vendors_DeepL:
 		c = vendors.NewDeepLClient(os.Getenv("DEEPL_API_KEY"))
-	case protos.Vendors_GoogleTranslate:
-		c = vendors.NewGoogleClient(os.Getenv("GOOGLE_PROJECT_ID"))
-	case protos.Vendors_MMT:
+	default:
 		c = vendors.NewGoogleClient(os.Getenv("GOOGLE_PROJECT_ID"))
 	}
 
-	sentry.CaptureMessage(
-		fmt.Sprintf(`Translating Text "%s" (%s -> %s) with %s client.`,
-			i.GetText(), i.GetSourceLang(), i.GetTargetLang(), i.GetVendor(),
-		),
+	log.Printf(
+		`Translating Text "%s" (%s -> %s) with %s client.`,
+		i.GetText(), i.GetSourceLang(), i.GetTargetLang(), i.GetVendor(),
 	)
 
 	resp, err := c.TranslateText([]string{i.GetText()}, i.GetSourceLang().String(), i.TargetLang.String())
@@ -48,8 +45,8 @@ func (t *Translation) Translate(
 
 	tra := &protos.TranslationOutput{
 		Text:        resp[0],
-		SourceLang:  i.GetSourceLang(),
-		TargetLang:  i.GetTargetLang(),
+		SourceLang:  i.SourceLang,
+		TargetLang:  i.TargetLang,
 		BilledChars: int32(utf8.RuneCountInString(i.GetText())),
 	}
 
