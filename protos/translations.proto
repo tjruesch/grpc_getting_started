@@ -9,7 +9,7 @@ message TranslationInput {
     string Text = 1;
     Languages SourceLang = 2;
     Languages TargetLang = 3;
-    Vendors Vendor = 4;
+    optional Vendors Vendor = 4;
 }
 
 message TranslationOutput {
@@ -20,16 +20,16 @@ message TranslationOutput {
 }
 
 enum Languages {
-    EN = 0;
+    NONE = 0;  // this will be the default which will not be returned
     DE = 1;
     ES = 2;
     CZ = 3;
     FA = 4;
     ZH = 5;
+    EN = 6;
 }
 
 enum Vendors {
     GoogleTranslate = 0;
     DeepL = 1;
-    MMT = 2;
 }
