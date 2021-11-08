@@ -3,12 +3,27 @@ package vendors
 import (
 	"context"
 	"fmt"
+	"io"
 
 	translate "cloud.google.com/go/translate/apiv3"
 	"github.com/getsentry/sentry-go"
 	translatepb "google.golang.org/genproto/googleapis/cloud/translate/v3"
 )
 
+// Error Handling
+type GoogleError struct {
+	e string
+}
+
+func (m *GoogleError) Error() string {
+	return m.e
+}
+
+func NewGoogleError(e string) *GoogleError {
+	return &GoogleError{e: e}
+}
+
+// Client
 type GoogleClient struct {
 	ProjectID string
 }
@@ -19,7 +34,7 @@ func NewGoogleClient(projectID string) *GoogleClient {
 
 // Translate a single string with the Google API
 func (g *GoogleClient) TranslateText(
-	text string,
+	text []string,
 	sl string,
 	tl string,
 ) ([]string, error) {
@@ -38,7 +53,7 @@ func (g *GoogleClient) TranslateText(
 		SourceLanguageCode: sl,
 		TargetLanguageCode: tl,
 		MimeType:           "text/plain", // Mime types: "text/plain", "text/html"
-		Contents:           []string{text},
+		Contents:           text,
 	}
 
 	resp, err := client.TranslateText(ctx, req)
@@ -53,4 +68,8 @@ func (g *GoogleClient) TranslateText(
 	}
 
 	return tr, nil
+}
+
+func (g *GoogleClient) TranslateFile(file io.ReadCloser, sl string, tl string) (io.ReadCloser, error) {
+	return nil, NewGoogleError("Not Implemented")
 }

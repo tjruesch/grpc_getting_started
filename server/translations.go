@@ -40,7 +40,7 @@ func (t *Translation) Translate(
 		),
 	)
 
-	resp, err := c.TranslateText(i.GetText(), i.GetSourceLang().String(), i.TargetLang.String())
+	resp, err := c.TranslateText([]string{i.GetText()}, i.GetSourceLang().String(), i.TargetLang.String())
 	if err != nil {
 		sentry.CaptureException(err)
 		return nil, err

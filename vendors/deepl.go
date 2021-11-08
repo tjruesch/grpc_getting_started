@@ -3,6 +3,7 @@ package vendors
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -46,7 +47,7 @@ func NewDeepLClient(authKey string) *DeepLClient {
 
 // TranslateText translates a given input text using the DeepL API
 func (d *DeepLClient) TranslateText(
-	text string,
+	text []string,
 	sl string,
 	tl string,
 ) ([]string, error) {
@@ -92,10 +93,12 @@ func (d *DeepLClient) parseResponse(body []byte) (*deeplResponse, error) {
 	return dr, err
 }
 
-func (d *DeepLClient) createRequest(text string, sl string, tl string) *url.Values {
+func (d *DeepLClient) createRequest(text []string, sl string, tl string) *url.Values {
 	data := url.Values{}
 
-	data.Add("text", text)
+	for _, t := range text {
+		data.Add("text", t)
+	}
 	data.Add("target_lang", tl)
 	data.Add("source_lang", sl)
 
@@ -138,4 +141,8 @@ func (d *DeepLClient) callAPI(data *url.Values, url string) ([]byte, error) {
 	}
 
 	return body, nil
+}
+
+func (d *DeepLClient) TranslateFile(file io.ReadCloser, sl string, tl string) (io.ReadCloser, error) {
+	return nil, NewGoogleError("Not Implemented")
 }
